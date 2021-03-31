@@ -14,6 +14,7 @@ export class Blockchain {
     this.height = -1;
 
     this.initChain();
+
   }
 
   private async initChain(): Promise<void> {
