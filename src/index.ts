@@ -18,6 +18,7 @@ class BlockchainServer {
         this.blockchain = new Blockchain();
 
         this.initKoa();
+        this.initRouteControllers();
 
         this.router.get('/', (ctx, next) => {
             // ctx.router available
@@ -35,6 +36,8 @@ class BlockchainServer {
             bodyParser.urlencoded({extended:true});
             bodyParser.json()
         });
+
+        this.app.listen(this.route_port, "http://localhost:3000/");
     }
 
     private initRouteControllers(): void {
