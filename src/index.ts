@@ -1,17 +1,33 @@
 import Koa from 'koa';
 import Router from 'koa-router';
+import {Blockchain} from './classes/blockchain';
 
-const app = new Koa();
-const router = new Router();
+class BlockchainServer {
 
-router.get('/', (ctx, next) => {
-    // ctx.router available
-    ctx.body = 'Hello World!';
-});
+    private app: Koa;
+    private router: Router;
+    // private blockchain: Blockchain;
 
-app.use(router.routes())
-    .use(router.allowedMethods());
+    constructor() {
+        this.app = new Koa();
+        this.router = new Router();
+        // this.blockchain = new Blockchain();
 
-const route_port = 3000;
+        this.router.get('/', (ctx, next) => {
+            // ctx.router available
+            ctx.body = 'Hello World!';
+        });
 
-app.listen(3000, () => {console.log(`http://localhost:${route_port}/`)});
+        this.app.use(this.router.routes())
+            .use(this.router.allowedMethods());
+
+        const route_port = 3000;
+
+        this.app.listen(3000, () => {console.log(`http://localhost:${route_port}/`)});
+    }
+
+}
+
+new BlockchainServer();
+
+
