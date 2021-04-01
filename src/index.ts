@@ -3,6 +3,7 @@ import Router from 'koa-router';
 import {Blockchain} from './classes/blockchain';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
+import {Blockchain_Router} from "./routes/blockchain_router";
 
 class BlockchainServer {
 
@@ -17,8 +18,6 @@ class BlockchainServer {
         this.router = new Router();
         this.blockchain = new Blockchain();
 
-        this.initKoa();
-
         this.router.get('/', (ctx, next) => {
             // ctx.router available
             ctx.body = 'Hello World!';
@@ -26,6 +25,9 @@ class BlockchainServer {
 
         this.app.use(this.router.routes())
             .use(this.router.allowedMethods());
+
+        this.initRouteControllers();
+        this.initKoa();
     }
 
     private initKoa(): void {
@@ -35,10 +37,12 @@ class BlockchainServer {
             bodyParser.urlencoded({extended:true});
             bodyParser.json()
         });
+
+        this.app.listen(this.route_port, () => {console.log(`http://localhost:${this.route_port}`)});
     }
 
     private initRouteControllers(): void {
-
+        new Blockchain_Router(this.app, this.blockchain);
     }
 
 }

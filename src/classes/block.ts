@@ -11,7 +11,7 @@ export class Block {
   constructor(data: any) {
     this.hash = null;
     this.height = 0;
-    this.body = new Buffer(JSON.stringify(data)).toString('hex');
+    this.body = Buffer.from(JSON.stringify(data)).toString('hex');
     this.timeStamp = '';
     this.prevBlockHash = '0x';
   }
