@@ -18,6 +18,7 @@ class BlockchainServer {
         this.router = new Router();
         this.blockchain = new Blockchain();
 
+        this.initKoa();
         this.router.get('/', (ctx, next) => {
             // ctx.router available
             ctx.body = 'Hello World!';
