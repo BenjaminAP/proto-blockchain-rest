@@ -16,11 +16,14 @@ export class Blockchain {
     this.initChain();
   }
 
-  private async initChain(): Promise<void> {
-    if (this.height === -1) {
-      const block = this.createGenesisBlock();
-      await this.addBlock(block);
-    }
+  private initChain(): Promise<Block> {
+
+    return new Promise<Block>((res, rej) => {
+      if (this.height === -1) {
+        const block = this.createGenesisBlock();
+        res(this.addBlock(block));
+      }
+    });
   }
 
   private createGenesisBlock(): Block {
@@ -28,7 +31,7 @@ export class Blockchain {
   }
 
   private getPrevBlockHash(): string {
-    return <string> this.chain[this.chain.length - 1].hash;
+    return <string> this.chain[this.getChainHeight()].hash;
   }
 
   public getChainHeight(): number {
@@ -47,6 +50,7 @@ export class Blockchain {
 
     return new Promise( (res, rej) => {
       newBlock.height = this.getChainHeight();
+      newBlock.height++;
       newBlock.timeStamp = this.setTimeStamp(); /// UTC t.s
 
       if (this.chain.length > 0) {
@@ -55,24 +59,23 @@ export class Blockchain {
 
       newBlock.hash = this.hashBlock(newBlock);
 
+      /// Make sure block is no tempered with before adding to chain
       if (!newBlock.validate()) {
-        console.log('Invalid BLock');
-        rej('Invalid Block');
-      } else {
-
-        console.log(newBlock.getBlockData());
-
-        this.chain.push(newBlock);
-        this.height++;
-        res(newBlock);
+        console.log('Invalid BLock', newBlock);
+        rej('Block as been tempered with');
       }
+      
+      console.log(newBlock.getBlockData());
 
+      this.chain.push(newBlock);
+
+      res(newBlock);
     });
   }
 
-  private requestMessageOwnershipVerification(address: string): Promise<void> {
-    return new Promise((resolve) => {
-
+  private requestMessageOwnershipVerification(address: string): Promise<string> {
+    return new Promise((res) => {
+      res(`${address}:${new Date().getTime().toString().slice(0,-3)}:starRegistry`)
     });
   }
 
