@@ -30,11 +30,16 @@ export class Block {
         prevBlockHash: this.prevBlockHash,
       }
       
-      if (this.hash === SHA256(JSON.stringify(blockToVerify)).toString()){
-        res(true);
-      } else {
-        rej(Error("Not a Valid Block"));
+      if (this.height > 0) {
+  
+        if (this.hash === SHA256(JSON.stringify(blockToVerify)).toString()){
+          res(true);
+        } else {
+          rej(Error("Not a Valid Block"));
+        }
       }
+      
+      res(true);
 
     })
 

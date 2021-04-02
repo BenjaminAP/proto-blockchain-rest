@@ -59,13 +59,11 @@ export class Blockchain {
 
       newBlock.hash = this.hashBlock(newBlock);
 
-      /// Make sure block is no tempered with before adding to chain
-      if (!newBlock.validate()) {
-        console.log('Invalid BLock', newBlock);
-        rej('Block as been tempered with');
-      }
-      
-      console.log(newBlock.getBlockData());
+      // /// Make sure block is no tempered with before adding to chain
+      // if (!newBlock.validate()) {
+      //   console.log('Invalid BLock', newBlock);
+      //   rej('Block as been tempered with');
+      // }
 
       this.chain.push(newBlock);
 
