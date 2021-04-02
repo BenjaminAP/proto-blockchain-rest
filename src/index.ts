@@ -11,6 +11,8 @@ class BlockchainServer {
     private router: Router;
     private blockchain: Blockchain;
     private route_port = 3000;
+    /// Kill port in use windows cmd: netstat -ano|findstr "PID :3000"
+    /// taskkill /pid {PID} /f
 
     constructor() {
 
@@ -18,7 +20,6 @@ class BlockchainServer {
         this.router = new Router();
         this.blockchain = new Blockchain();
 
-        this.initKoa();
         this.router.get('/', (ctx, next) => {
             // ctx.router available
             ctx.body = 'Hello World!';
