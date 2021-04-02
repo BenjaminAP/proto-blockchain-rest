@@ -13,11 +13,17 @@
   "license": "ISC",
   "dependencies": {
     "@types/bitcoinjs-lib": "^5.0.0",
+    "@types/body-parser": "^1.19.0",
     "@types/crypto-js": "^4.0.1",
+    "@types/koa": "^2.13.1",
     "@types/morgan": "^1.9.2",
-    "crypto-js": "^4.0.0",
+    "bitcoinjs-message": "^2.2.0",
+    "body-parser": "^1.19.0",
+    "crypto-js": "^4.0  .0",
+    "hex2ascii": "^0.0.3",
     "koa": "^2.13.1",
-    "koa-router": "^10.0.0"
+    "koa-router": "^10.0.0",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "@types/koa-router": "^7.4.1",
