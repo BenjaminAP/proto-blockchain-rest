@@ -10,6 +10,7 @@ export class Blockchain_Router {
     private server: Koa;
     private blockchain: Blockchain;
     private router: Router;
+    private async: any;
 
     constructor(server: Koa, blockchainObj: Blockchain) {
         this.server = server;
@@ -21,10 +22,31 @@ export class Blockchain_Router {
             ctx.body = 'Hello Blockchain!';
         });
 
+        this.initRoutes();
+
+    }
+
+    private initRoutes(): void {
+
+        this.getChainHeight();
+        this.getBlockByHeight();
+
         this.server.use(this.router.routes())
             .use(this.router.allowedMethods());
     }
 
+    private getChainHeight(): void {
+        this.router.get('/chain/height', async (ctx, next) => {
+            ctx.body = await this.blockchain.getChainHeight();
+            console.log(ctx.body);
+        })
+    }
 
+    private getBlockByHeight(): void {
+        this.router.get('/block/height/:height', (ctx, next) => {
+            console.log(ctx.params.height);
+            ctx.body = ctx.params.height;
+        })
+    }
 
 }
