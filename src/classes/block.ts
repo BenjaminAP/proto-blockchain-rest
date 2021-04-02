@@ -30,9 +30,8 @@ export class Block {
         prevBlockHash: this.prevBlockHash,
       }
 
-      return this.hash === SHA256(JSON.stringify(blockToVerify)).toString();
+      res(this.hash === SHA256(JSON.stringify(blockToVerify)).toString());
     })
-
 
   }
 

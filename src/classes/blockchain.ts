@@ -43,9 +43,9 @@ export class Blockchain {
     return new Date().getTime().toString().slice(0, -3);
   }
 
-  private addBlock(newBlock: Block): Promise<string> {
+  private addBlock(newBlock: Block): Promise<Block> {
 
-    return new Promise( async (res, rej) => {
+    return new Promise( (res, rej) => {
       newBlock.height = this.getChainHeight();
       newBlock.timeStamp = this.setTimeStamp(); /// UTC t.s
 
@@ -64,7 +64,7 @@ export class Blockchain {
 
         this.chain.push(newBlock);
         this.height++;
-        res('Valid Block added');
+        res(newBlock);
       }
 
     });
