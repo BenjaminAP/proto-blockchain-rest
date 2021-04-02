@@ -14,7 +14,6 @@ export class Blockchain {
     this.height = -1;
 
     this.initChain();
-
   }
 
   private async initChain(): Promise<void> {
@@ -32,10 +31,8 @@ export class Blockchain {
     return <string> this.chain[this.chain.length - 1].hash;
   }
 
-  public getChainHeight(): Promise<number> {
-    return new Promise((res, rej) => {
-      res(this.height);
-    })
+  public getChainHeight(): number {
+    return this.height;
   }
 
   private hashBlock(block: Block): string {
@@ -46,10 +43,10 @@ export class Blockchain {
     return new Date().getTime().toString().slice(0, -3);
   }
 
-  private addBlock(newBlock: Block): Promise<void> {
+  private addBlock(newBlock: Block): Promise<string> {
 
-    return new Promise(async (res, rej) => {
-      newBlock.height = await this.getChainHeight();
+    return new Promise( async (res, rej) => {
+      newBlock.height = this.getChainHeight();
       newBlock.timeStamp = this.setTimeStamp(); /// UTC t.s
 
       if (this.chain.length > 0) {
@@ -58,8 +55,18 @@ export class Blockchain {
 
       newBlock.hash = this.hashBlock(newBlock);
 
-      this.chain.push(newBlock);
-      this.height = this.chain.length;
+      if (!newBlock.validate()) {
+        console.log('Invalid BLock');
+        rej('Invalid Block');
+      } else {
+
+        console.log(newBlock.getBlockData());
+
+        this.chain.push(newBlock);
+        this.height++;
+        res('Valid Block added');
+      }
+
     });
   }
 
