@@ -77,15 +77,30 @@ export class Blockchain {
     });
   }
 
-  private submitStar(address: string, message: string, signature: string, star: any): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-
+  private submitStar(address: string, message: string, signature: string, star: any): Promise<Block> {
+    return new Promise(async (res, rej) => {
+  
+      /// [0]: address; [1]: time; [2]: starRegistry
+      const sentMsgTime = parseInt(message.split(':')[1]);
+      const currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
+      
+      console.log(sentMsgTime - currentTime);
+      
+      if (sentMsgTime - currentTime < 5 && bitcoinMessage.verify(message, address, signature)) {
+        const newBlock = new Block(star);
+        
+        res(this.addBlock(newBlock));
+      }
     });
   }
 
-  private getBlockByHash(hash: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-
+  private getBlockByHash(hash: string): Promise<Block[]> {
+    return new Promise((res, rej) => {
+      const blockFound = this.chain.filter((block: Block) => {
+        return block.hash === hash;
+      });
+      
+      res(blockFound);
     });
   }
 
@@ -102,7 +117,7 @@ export class Blockchain {
 
   private getStarsByWalletAddress(address: string): Promise<void> {
     const stars = [];
-    return new Promise((resolve, reject) => {
+    return new Promise((res, rej) => {
 
     });
   }
