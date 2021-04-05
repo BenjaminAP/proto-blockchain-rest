@@ -45,8 +45,8 @@ class BlockchainServer {
     }
 
     private initRouteControllers(): void {
-        new Blockchain_Router(this.app, this.blockchain);
-        new Wallet_Router(this.app);
+        new Blockchain_Router(this.app, this.router, this.blockchain);
+        new Wallet_Router(this.app, this.router);
     }
 
 }

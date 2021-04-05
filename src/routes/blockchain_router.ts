@@ -11,10 +11,10 @@ export class Blockchain_Router {
     private blockchain: Blockchain;
     private router: Router;
 
-    constructor(server: Koa, blockchainObj: Blockchain) {
+    constructor(server: Koa, app_router:Router, blockchainObj: Blockchain) {
         this.server = server;
         this.blockchain = blockchainObj;
-        this.router = new Router();
+        this.router = app_router;
 
         this.router.get('/blockchain', (ctx, next) => {
             // ctx.router available

@@ -1,6 +1,5 @@
 import Router from "koa-router";
 import Koa from "koa";
-import {Blockchain} from "../classes/blockchain";
 import {Wallet} from "../classes/wallet";
 
 export class Wallet_Router {
@@ -8,10 +7,10 @@ export class Wallet_Router {
     private server: Koa;
     private router: Router;
 
-    constructor(server: Koa) {
+    constructor(server: Koa, app_router:Router) {
 
         this.server = server;
-        this.router = new Router();
+        this.router = app_router;
 
         this.router.get('/wallet', (ctx, next) => {
             // ctx.router available
