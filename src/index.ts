@@ -4,6 +4,7 @@ import {Blockchain} from './classes/blockchain';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import {Blockchain_Router} from "./routes/blockchain_router";
+import {Wallet_Router} from "./routes/wallet_router";
 
 class BlockchainServer {
 
@@ -45,6 +46,7 @@ class BlockchainServer {
 
     private initRouteControllers(): void {
         new Blockchain_Router(this.app, this.blockchain);
+        new Wallet_Router(this.app);
     }
 
 }

@@ -10,7 +10,6 @@ export class Blockchain_Router {
     private server: Koa;
     private blockchain: Blockchain;
     private router: Router;
-    private async: any;
 
     constructor(server: Koa, blockchainObj: Blockchain) {
         this.server = server;

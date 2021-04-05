@@ -9,9 +9,9 @@ const mnemonic = bip39.generateMnemonic();
 
 const key = ec.keyFromSecret(Buffer.from(JSON.stringify(mnemonic), 'hex'));
 
-console.log(key);
+// console.log(key);
 
-console.log(mnemonic);
+// console.log(mnemonic);
 
 const  bitcointLib = require('bitcoinjs-lib');
 
@@ -19,6 +19,10 @@ export class Wallet {
         
         constructor() {
         
+        }
+
+        public generateMnemonic(): string {
+                return bip39.generateMnemonic();
         }
 }
 
