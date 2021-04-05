@@ -6,6 +6,8 @@ import morgan from 'morgan';
 import {Blockchain_Router} from "./routes/blockchain_router";
 import {Wallet_Router} from "./routes/wallet_router";
 
+const cors = require('@koa/cors');
+
 class BlockchainServer {
 
     private app: Koa;
@@ -18,6 +20,8 @@ class BlockchainServer {
     constructor() {
 
         this.app = new Koa();
+        this.app.use(cors());
+
         this.router = new Router();
         this.blockchain = new Blockchain();
 
