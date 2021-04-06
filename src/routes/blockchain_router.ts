@@ -75,7 +75,8 @@ export class Blockchain_Router {
     
     private submitStar(): void {
         this.router.post('/submitStar', async (ctx, next) => {
-            console.log('params', ctx.params);
+            console.log('ctx', ctx.request.body);
+            ctx.body = ctx.request.body;
         });
     }
     

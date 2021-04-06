@@ -1,5 +1,6 @@
 import Koa from 'koa';
 import Router from 'koa-router';
+import KoaBody from "koa-body";
 import {Blockchain} from './classes/blockchain';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
@@ -21,6 +22,7 @@ class BlockchainServer {
 
         this.app = new Koa();
         this.app.use(cors());
+        this.app.use(KoaBody());
 
         this.router = new Router();
         this.blockchain = new Blockchain();
