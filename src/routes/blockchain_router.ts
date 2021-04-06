@@ -38,25 +38,21 @@ export class Blockchain_Router {
     private getChainHeight(): void {
         this.router.get('/chain/height', async (ctx, next) => {
             ctx.body = await this.blockchain.getChainHeight();
-            console.log(ctx.body);
         })
     }
 
     private getBlockByHeight(): void {
         this.router.get('/block/height/:height', (ctx, next) => {
-            console.log(ctx.params.height);
             ctx.body = ctx.params.height;
         })
     }
 
 
     private requestMessageOwnershipVerification(): void {
-        this.router.get('/signature/request/:pubAddress', (ctx, next) => {
-            console.log(ctx.params.pubAddress);
+        this.router.get('/signature/request/:pubAddress', async (ctx, next) => {
             const public_address = ctx.params.pubAddress;
-            console.log(this.blockchain.requestMessageOwnershipVerification(public_address));
-            ctx.body = this.blockchain.requestMessageOwnershipVerification(public_address);
-        })
+            ctx.body = await this.blockchain.requestMessageOwnershipVerification(public_address);
+        });
     }
 
 }

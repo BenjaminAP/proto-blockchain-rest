@@ -72,8 +72,8 @@ export class Blockchain {
   }
 
   public requestMessageOwnershipVerification(address: string): Promise<string> {
-    return new Promise((res) => {
-      res(`${address}:${new Date().getTime().toString().slice(0,-3)}:starRegistry`)
+    return new Promise(async (res) => {
+      res(`${address}:${new Date().getTime().toString().slice(0,-3)}:starRegistry`);
     });
   }
 
@@ -86,7 +86,7 @@ export class Blockchain {
       
       console.log(sentMsgTime - currentTime);
       
-      if (sentMsgTime - currentTime < 5 && bitcoinMessage.verify(message, address, signature)) {
+      if (sentMsgTime - currentTime < 60*5 && bitcoinMessage.verify(message, address, signature)) {
         const newBlock = new Block(star);
         
         res(this.addBlock(newBlock));

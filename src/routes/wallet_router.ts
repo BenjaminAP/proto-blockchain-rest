@@ -21,7 +21,7 @@ export class Wallet_Router {
     }
 
     private initRoutes() {
-        this.generateMnemonic()
+        this.generateMnemonic();
 
         this.server.use(this.router.routes())
             .use(this.router.allowedMethods());
