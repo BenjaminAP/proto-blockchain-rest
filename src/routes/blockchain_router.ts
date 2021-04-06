@@ -29,6 +29,9 @@ export class Blockchain_Router {
 
         this.getChainHeight();
         this.getBlockByHeight();
+        this.getStarByOwner();
+        this.submitStar();
+        this.getBlockByHash();
         this.requestMessageOwnershipVerification();
 
         this.server.use(this.router.routes())
@@ -42,7 +45,7 @@ export class Blockchain_Router {
     }
 
     private getBlockByHeight(): void {
-        this.router.get('/block/height/:height', (ctx, next) => {
+        this.router.get('/block/height/:height', async (ctx, next) => {
             ctx.body = ctx.params.height;
         })
     }
@@ -50,9 +53,38 @@ export class Blockchain_Router {
 
     private requestMessageOwnershipVerification(): void {
         this.router.get('/signature/request/:pubAddress', async (ctx, next) => {
-            const public_address = ctx.params.pubAddress;
-            ctx.body = await this.blockchain.requestMessageOwnershipVerification(public_address);
+            
+            console.log('something to show');
+            
+            if (ctx.params.pubAddress) {
+                const public_address = ctx.params.pubAddress;
+                const msg = await this.blockchain.requestMessageOwnershipVerification(public_address);
+                
+                if (msg) {
+                    ctx.body = msg;
+                } else {
+                    ctx.throw(500, 'An error happened!');
+                }
+                
+            } else {
+                ctx.throw(500, 'Check the body parameter');
+            }
+            
         });
+    }
+    
+    private submitStar(): void {
+        this.router.post('/submitStar', async (ctx, next) => {
+            console.log('params', ctx.params);
+        });
+    }
+    
+    private getBlockByHash() {
+    
+    }
+    
+    private getStarByOwner() {
+    
     }
 
 }
