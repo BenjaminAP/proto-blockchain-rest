@@ -71,7 +71,7 @@ export class Blockchain {
     });
   }
 
-  private requestMessageOwnershipVerification(address: string): Promise<string> {
+  public requestMessageOwnershipVerification(address: string): Promise<string> {
     return new Promise((res) => {
       res(`${address}:${new Date().getTime().toString().slice(0,-3)}:starRegistry`)
     });

@@ -29,6 +29,7 @@ export class Blockchain_Router {
 
         this.getChainHeight();
         this.getBlockByHeight();
+        this.requestMessageOwnershipVerification();
 
         this.server.use(this.router.routes())
             .use(this.router.allowedMethods());
@@ -45,6 +46,16 @@ export class Blockchain_Router {
         this.router.get('/block/height/:height', (ctx, next) => {
             console.log(ctx.params.height);
             ctx.body = ctx.params.height;
+        })
+    }
+
+
+    private requestMessageOwnershipVerification(): void {
+        this.router.get('/signature/request/:pubAddress', (ctx, next) => {
+            console.log(ctx.params.pubAddress);
+            const public_address = ctx.params.pubAddress;
+            console.log(this.blockchain.requestMessageOwnershipVerification(public_address));
+            ctx.body = this.blockchain.requestMessageOwnershipVerification(public_address);
         })
     }
 
