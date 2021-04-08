@@ -6,9 +6,9 @@ Do to having issues with the bitcoin core wallet I had to develop a wallet inter
 - Sorry for the inconvenience, but it was the only way I could make some progress.
 
 
-1. npm install --global yarn
-2. yarn install
-3. yarn dev or yarn start
+1. ```npm install --global yarn```
+2. ```yarn install```
+3. ```yarn dev``` or ```yarn start```
 4. server runs in port http://localhost:3000/
 
 - routes that can be tested in postman passing param to the route:
