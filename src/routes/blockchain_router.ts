@@ -2,7 +2,17 @@ import {Blockchain} from "../classes/blockchain";
 import Router from "koa-router";
 import Koa from "koa";
 
-class BlockchainServer {
+const  bitcoinMessage = require('bitcoinjs-message');
+
+interface Data  {
+    address: string;
+    message: string;
+    signature: string;
+    star: {
+        dec: string,
+        ra: string,
+        story: string
+    };
 }
 
 export class Blockchain_Router {
@@ -54,8 +64,6 @@ export class Blockchain_Router {
     private requestMessageOwnershipVerification(): void {
         this.router.get('/signature/request/:pubAddress', async (ctx, next) => {
             
-            console.log('something to show');
-            
             if (ctx.params.pubAddress) {
                 const public_address = ctx.params.pubAddress;
                 const msg = await this.blockchain.requestMessageOwnershipVerification(public_address);
@@ -75,8 +83,9 @@ export class Blockchain_Router {
     
     private submitStar(): void {
         this.router.post('/submitStar', async (ctx, next) => {
-            console.log('ctx', ctx.request.body);
-            ctx.body = ctx.request.body;
+            const dataToSubmit: Data = ctx.request.body
+
+            ctx.body =  await this.blockchain.submitStar(dataToSubmit.address, dataToSubmit.message, dataToSubmit.signature, dataToSubmit.star);
         });
     }
     

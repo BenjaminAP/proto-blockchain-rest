@@ -1,24 +1,33 @@
 import {Block} from './block';
+import {Wallet} from './wallet';
 const SHA256 = require('crypto-js/sha256');
 const  bitcoinMessage = require('bitcoinjs-message');
 
 // const SHA256  = require('crypto-js/sha256');
 
+export interface Star {
+  dec: string;
+  ra: string;
+  story: string;
+}
+
 export class Blockchain {
   private chain: Block[];
   private height: number;
+  private walletMsg: Wallet;
 
 
   constructor() {
     this.chain = [];
     this.height = -1;
+    this.walletMsg = new Wallet();
 
     this.initChain();
   }
 
   private initChain(): Promise<Block> {
 
-    return new Promise<Block>((res, rej) => {
+    return new Promise<Block>(async (res, rej) => {
       if (this.height === -1) {
         const block = this.createGenesisBlock();
         res(this.addBlock(block));
@@ -66,7 +75,8 @@ export class Blockchain {
       // }
 
       this.chain.push(newBlock);
-
+      this.height++;
+      console.log(newBlock);
       res(newBlock);
     });
   }
@@ -77,19 +87,20 @@ export class Blockchain {
     });
   }
 
-  private submitStar(address: string, message: string, signature: string, star: any): Promise<Block> {
+  public submitStar(address: string, message: string, signature: string, star: Star): Promise<Block | string> {
     return new Promise(async (res, rej) => {
   
       /// [0]: address; [1]: time; [2]: starRegistry
       const sentMsgTime = parseInt(message.split(':')[1]);
       const currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
       
-      console.log(sentMsgTime - currentTime);
-      
-      if (sentMsgTime - currentTime < 60*5 && bitcoinMessage.verify(message, address, signature)) {
+      if ((currentTime - sentMsgTime) < 300 && this.walletMsg.verify(message, address, signature)) {
         const newBlock = new Block(star);
         
         res(this.addBlock(newBlock));
+      } else {
+        res(`Message ${message} took to long from you side to sumbit. Request another msg and try again`);
+        rej(`Message ${message} took to long from you side to sumbit. Request another msg and try again`);
       }
     });
   }
