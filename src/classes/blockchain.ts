@@ -67,16 +67,19 @@ export class Blockchain {
       }
 
       newBlock.hash = this.hashBlock(newBlock);
-
-      // /// Make sure block is no tempered with before adding to chain
-      // if (!newBlock.validate()) {
-      //   console.log('Invalid BLock', newBlock);
-      //   rej('Block as been tempered with');
-      // }
+  
+  
+      /// validate chain before adding new block && validate block
+      if (!this.validateChain()) {
+        rej('Invalid Chain');
+      } else if (!newBlock.validate()) {
+        rej('Invalid Block');
+      }
 
       this.chain.push(newBlock);
       this.height++;
       console.log(newBlock);
+      
       res(newBlock);
     });
   }
@@ -148,10 +151,22 @@ export class Blockchain {
     });
   }
 
-  private validateChain(): Promise<void> {
+  private validateChain(): Promise<boolean> {
     const errorLog = [];
     return new Promise(async (resolve, reject) => {
-
+      
+      let prevHash = this.chain[0].hash;
+      
+      for (let index = 1; index < this.chain.length -1; index++) {
+        
+        if(this.chain[index].prevBlockHash !== prevHash) {
+          return false
+        }
+  
+        prevHash = this.chain[index].prevBlockHash;
+      }
+      
+      return true;
     });
   }
 }

@@ -38,7 +38,7 @@ export class Blockchain_Router {
     private initRoutes(): void {
 
         this.getChainHeight();
-        this.getBlockByHeight();
+        // this.getBlockByHeight();
         this.getStarByOwner();
         this.submitStar();
         this.getBlockByHash();
@@ -53,13 +53,6 @@ export class Blockchain_Router {
             ctx.body = await this.blockchain.getChainHeight();
         })
     }
-
-    private getBlockByHeight(): void {
-        this.router.get('/block/height/:height', async (ctx, next) => {
-            ctx.body = ctx.params.height;
-        })
-    }
-
 
     private requestMessageOwnershipVerification(): void {
         this.router.get('/signature/request/:pubAddress', async (ctx, next) => {
@@ -101,5 +94,12 @@ export class Blockchain_Router {
             ctx.body = await this.blockchain.getStarsByWalletAddress(ctx.params.address);
         })
     }
+    
+    
+    // private getBlockByHeight(): void {
+    //     this.router.get('/block/height/:height', async (ctx, next) => {
+    //         ctx.body = ctx.params.height;
+    //     })
+    // }
 
 }
