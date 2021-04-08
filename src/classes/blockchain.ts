@@ -1,4 +1,4 @@
-import {Block} from './block';
+import {Block, BlockData} from './block';
 import {Wallet} from './wallet';
 const SHA256 = require('crypto-js/sha256');
 const  bitcoinMessage = require('bitcoinjs-message');
@@ -95,7 +95,13 @@ export class Blockchain {
       const currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
       
       if ((currentTime - sentMsgTime) < 300 && this.walletMsg.verify(message, address, signature)) {
-        const newBlock = new Block(star);
+        const data: BlockData = {
+          star: star,
+          message: message,
+          address: address,
+          signature: signature
+        }
+        const newBlock = new Block(data);
         
         res(this.addBlock(newBlock));
       } else {
@@ -105,13 +111,13 @@ export class Blockchain {
     });
   }
 
-  private getBlockByHash(hash: string): Promise<Block[]> {
-    return new Promise((res, rej) => {
-      const blockFound = this.chain.filter((block: Block) => {
+  public getBlockByHash(hash: string): Promise<Block[]> {
+    return new Promise(async (res, rej) => {
+      const blocksFound = this.chain.filter((block: Block) => {
         return block.hash === hash;
       });
       
-      res(blockFound);
+      res(blocksFound);
     });
   }
 
@@ -126,10 +132,19 @@ export class Blockchain {
     });
   }
 
-  private getStarsByWalletAddress(address: string): Promise<void> {
-    const stars = [];
-    return new Promise((res, rej) => {
-
+  public getStarsByWalletAddress(address: string): Promise<Star[]> {
+    return new Promise(async (res, rej) => {
+      const starsFound: Star[] = [];
+      
+      this.chain.filter(async (block: Block) => {
+        const blockData: BlockData = await block.getBlockData();
+        
+        if (blockData.address === address) {
+          starsFound.push(blockData.star);
+        }
+      });
+      
+      res(starsFound);
     });
   }
 

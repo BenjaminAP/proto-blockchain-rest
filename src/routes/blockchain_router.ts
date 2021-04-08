@@ -90,11 +90,16 @@ export class Blockchain_Router {
     }
     
     private getBlockByHash() {
-    
+        this.router.get('/block/hash/:hash', async (ctx, next) => {
+            console.log(ctx.params.hash);
+            ctx.body = await this.blockchain.getBlockByHash(ctx.params.hash);
+        })
     }
     
     private getStarByOwner() {
-    
+        this.router.get('/star/owner/:address', async (ctx, next) => {
+            ctx.body = await this.blockchain.getStarsByWalletAddress(ctx.params.address);
+        })
     }
 
 }

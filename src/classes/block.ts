@@ -3,6 +3,18 @@ import {IBlock} from '../models/IBlock';
 const SHA256 = require('crypto-js/sha256');
 const hex2ascii = require('hex2ascii');
 
+export interface BlockData  {
+  address: string;
+  message: string;
+  signature: string;
+  star: {
+    dec: string,
+    ra: string,
+    story: string
+  };
+}
+
+
 export class Block {
   hash: string | null;
   height: number;
@@ -13,7 +25,7 @@ export class Block {
   constructor(data: any) {
     this.hash = null;
     this.height = 0;
-    this.body = Buffer.from(JSON.stringify({'data': data})).toString('hex');
+    this.body = Buffer.from(JSON.stringify(data)).toString('hex');
     this.timeStamp = '';
     this.prevBlockHash = '0x';
   }
@@ -45,10 +57,11 @@ export class Block {
 
   }
 
-  public getBlockData(): Promise<{ data: any }> {
+  public getBlockData(): Promise<BlockData> {
 
-    return new Promise<{data: any}>((res, rej) => {
-      res(JSON.parse(hex2ascii(this.body)));
+    return new Promise<any>(async (res, rej) => {
+      const blockData: BlockData = JSON.parse(hex2ascii(this.body));
+      res(blockData);
     });
   }
 }
