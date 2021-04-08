@@ -15,3 +15,6 @@ Do to having issues with the bitcoin core wallet I had to develop a wallet inter
 
 1. http://localhost:3000/block/hash/:hash
 2. http://localhost:3000/star/owner/:address
+
+#GitHub Repo:
+https://github.com/BenjaminAP/proto-blockchain-rest
