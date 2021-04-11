@@ -7,7 +7,7 @@ export class Wallet_Router {
     private server: Koa;
     private router: Router;
 
-    constructor(server: Koa, app_router:Router) {
+    constructor(server: Koa, app_router: Router) {
 
         this.server = server;
         this.router = app_router;
@@ -32,8 +32,12 @@ export class Wallet_Router {
 
         this.router.get('/wallet/new/mnemonic', async (ctx, next) => {
             // ctx.router available
-            ctx.body = wallet.generateMnemonic();
+            try {
+                ctx.body = await wallet.generateMnemonic();
+            } catch (err) {
+                console.log(err);
+                ctx.body = err;
+            }
         });
     }
-
 }
