@@ -20,7 +20,7 @@ export class Block {
     height: number;
     body: string;
     timeStamp: string;
-    prevBlockHash: string;
+    prevBlockHash: string | null;
 
     constructor(data: any) {
         this.hash = null;

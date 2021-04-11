@@ -46,10 +46,6 @@ export class Blockchain {
         });
     }
 
-    private getPrevBlockHash(): string {
-        return <string>this.chain[this.getChainHeight()].hash;
-    }
-
     public getChainHeight(): number {
         return this.height;
     }
@@ -70,14 +66,14 @@ export class Blockchain {
             newBlock.timeStamp = this.setTimeStamp(); /// UTC t.s
 
             if (this.chain.length > 0) {
-                newBlock.prevBlockHash = this.getPrevBlockHash();
+                newBlock.prevBlockHash = this.chain[newBlock.height - 1].hash;
             }
 
             newBlock.hash = this.hashBlock(newBlock);
 
 
             /// validate chain before adding new block && validate block
-            if (!this.validateChain()) {
+            if (!await this.validateChain()) {
                 rej('Invalid Chain');
             } else if (!await newBlock.validate()) {
                 rej('Invalid Block');
@@ -104,7 +100,7 @@ export class Blockchain {
             const sentMsgTime = parseInt(message.split(':')[1]);
             const currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
 
-            if ((currentTime - sentMsgTime) < 300 && this.walletMsg.verify(message, address, signature)) {
+            if ((currentTime - sentMsgTime) < 300 && await this.walletMsg.verify(message, address, signature)) {
                 const data: BlockData = {
                     star: star,
                     message: message,
@@ -113,7 +109,7 @@ export class Blockchain {
                 }
                 const newBlock = new Block(data);
 
-                res(this.addBlock(newBlock));
+                res(await this.addBlock(newBlock));
             } else {
                 res(`Message ${message} took to long from you side to sumbit. Request another msg and try again`);
                 rej(`Message ${message} took to long from you side to sumbit. Request another msg and try again`);

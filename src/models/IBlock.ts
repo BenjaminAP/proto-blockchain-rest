@@ -3,5 +3,5 @@ export interface IBlock {
     height: number;
     body: string;
     timeStamp: string;
-    prevBlockHash: string;
+    prevBlockHash: string | null;
 }
