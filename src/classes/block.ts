@@ -42,18 +42,12 @@ export class Block {
                 prevBlockHash: this.prevBlockHash,
             }
 
-            if (this.height > 0) {
-
-                if (this.hash === SHA256(JSON.stringify(blockToVerify)).toString()) {
-                    res(true);
-                } else {
-                    res(false);
-                }
+            if (this.hash !== SHA256(JSON.stringify(blockToVerify)).toString()) {
+                res(false);
             }
 
-            res(true);
-
-        })
+            res(true)
+        });
 
     }
 

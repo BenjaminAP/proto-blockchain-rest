@@ -1,10 +1,11 @@
 import {Blockchain} from "../classes/blockchain";
 import Router from "koa-router";
 import Koa from "koa";
+import {rejects} from "assert";
 
-const  bitcoinMessage = require('bitcoinjs-message');
+const bitcoinMessage = require('bitcoinjs-message');
 
-interface Data  {
+interface Data {
     address: string;
     message: string;
     signature: string;
@@ -21,7 +22,7 @@ export class Blockchain_Router {
     private blockchain: Blockchain;
     private router: Router;
 
-    constructor(server: Koa, app_router:Router, blockchainObj: Blockchain) {
+    constructor(server: Koa, app_router: Router, blockchainObj: Blockchain) {
         this.server = server;
         this.blockchain = blockchainObj;
         this.router = app_router;
@@ -50,52 +51,124 @@ export class Blockchain_Router {
 
     private getChainHeight(): void {
         this.router.get('/chain/height', async (ctx, next) => {
-            ctx.body = await this.blockchain.getChainHeight();
+
+            try {
+                ctx.body = await this.blockchain.getChainHeight();
+            } catch (err) {
+                console.log(err);
+            }
         })
     }
 
     private requestMessageOwnershipVerification(): void {
         this.router.get('/signature/request/:pubAddress', async (ctx, next) => {
-            
-            if (ctx.params.pubAddress) {
-                const public_address = ctx.params.pubAddress;
-                const msg = await this.blockchain.requestMessageOwnershipVerification(public_address);
-                
-                if (msg) {
-                    ctx.body = msg;
+
+            try {
+                if (ctx.params.pubAddress) {
+                    const public_address = ctx.params.pubAddress;
+                    const msg = await this.blockchain.requestMessageOwnershipVerification(public_address);
+
+                    if (msg) {
+                        ctx.body = msg;
+                    } else {
+                        ctx.throw(500, 'An error happened!');
+                    }
+
                 } else {
-                    ctx.throw(500, 'An error happened!');
+                    ctx.throw(500, 'Check the body parameter');
                 }
-                
-            } else {
-                ctx.throw(500, 'Check the body parameter');
+            } catch (err) {
+
+                console.log(err);
+                ctx.throw(500, err);
             }
-            
+
+
         });
     }
-    
+
     private submitStar(): void {
         this.router.post('/submitStar', async (ctx, next) => {
-            const dataToSubmit: Data = ctx.request.body
 
-            ctx.body =  await this.blockchain.submitStar(dataToSubmit.address, dataToSubmit.message, dataToSubmit.signature, dataToSubmit.star);
+            try {
+
+                if (ctx.request.body) {
+                    const dataToSubmit: Data = ctx.request.body
+
+                    const starSubmited = await this.blockchain
+                        .submitStar(
+                            dataToSubmit.address,
+                            dataToSubmit.message,
+                            dataToSubmit.signature,
+                            dataToSubmit.star);
+
+                    if (starSubmited) {
+                        ctx.body = starSubmited;
+                    } else {
+                        ctx.throw(500, 'Something went wrong submitting star');
+                    }
+
+                } else {
+                    ctx.throw(500, 'Check the body parameter');
+                }
+
+            } catch (err) {
+                console.log(err);
+                ctx.throw(500, err);
+            }
         });
     }
-    
+
     private getBlockByHash() {
         this.router.get('/block/hash/:hash', async (ctx, next) => {
-            console.log(ctx.params.hash);
-            ctx.body = await this.blockchain.getBlockByHash(ctx.params.hash);
+
+            try {
+                if (ctx.params.hash) {
+                    console.log(ctx.params.hash);
+                    const blockFound = await this.blockchain.getBlockByHash(ctx.params.hash);
+
+                    if (blockFound) {
+                        ctx.body = blockFound;
+                    } else {
+                        ctx.throw(500, "An error happened");
+                    }
+
+                } else {
+                    ctx.throw(500, "Hash not provided in route");
+                }
+            } catch (err) {
+                console.log(err);
+                ctx.throw(500, "An Error Happened");
+            }
         })
     }
-    
+
     private getStarByOwner() {
         this.router.get('/star/owner/:address', async (ctx, next) => {
-            ctx.body = await this.blockchain.getStarsByWalletAddress(ctx.params.address);
-        })
+
+            try {
+
+                if (ctx.params.address) {
+                    const starsFound = await this.blockchain.getStarsByWalletAddress(ctx.params.address);
+
+                    if (starsFound) {
+                        ctx.body = starsFound;
+                    } else {
+                        ctx.throw(500, "An error Happened");
+                    }
+
+                } else {
+                    ctx.throw(500, "Address not provided");
+                }
+
+            } catch (err) {
+                console.log(err);
+                ctx.throw(500, "An error Happened");
+            }
+        });
     }
-    
-    
+
+
     // private getBlockByHeight(): void {
     //     this.router.get('/block/height/:height', async (ctx, next) => {
     //         ctx.body = ctx.params.height;
